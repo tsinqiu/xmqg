@@ -4,6 +4,13 @@ import { aboutSections, dailyFacts, feeds, navItems, profile, socialLinks, timel
 
 const view = ref('home')
 const failedCovers = ref({})
+const dailyQuote = ref('慢慢来，你已经在变好的路上了。')
+const quoteFrom = ref('本地兜底')
+const weather = ref({
+  place: '江南大学附近',
+  text: '天气加载中...',
+  detail: '正在获取今日天气',
+})
 const feedKeys = Object.keys(feeds)
 
 const allViews = computed(() => [...navItems.map((item) => item.id), ...feedKeys])
@@ -15,11 +22,6 @@ const today = new Intl.DateTimeFormat('zh-CN', {
   day: 'numeric',
   weekday: 'long',
 }).format(new Date())
-
-const todayFact = computed(() => {
-  const dayIndex = new Date().getDate() % dailyFacts.length
-  return dailyFacts[dayIndex]
-})
 
 function setView(nextView) {
   if (!allViews.value.includes(nextView)) return
@@ -48,6 +50,96 @@ function viewLabel(id) {
   return navItems.find((item) => item.id === id)?.label || feeds[id]?.label || '个人主页'
 }
 
+const weatherText = {
+  0: '晴',
+  1: '大部晴朗',
+  2: '局部多云',
+  3: '阴',
+  45: '有雾',
+  48: '霜雾',
+  51: '小毛毛雨',
+  53: '中等毛毛雨',
+  55: '大毛毛雨',
+  61: '小雨',
+  63: '中雨',
+  65: '大雨',
+  71: '小雪',
+  73: '中雪',
+  75: '大雪',
+  80: '阵雨',
+  81: '中等阵雨',
+  82: '强阵雨',
+  95: '雷雨',
+}
+
+async function loadDailyQuote() {
+  try {
+    const response = await fetch('https://v1.hitokoto.cn/?c=d&encode=json')
+    if (!response.ok) throw new Error('quote request failed')
+    const data = await response.json()
+    dailyQuote.value = data.hitokoto || dailyQuote.value
+    quoteFrom.value = data.from ? `《${data.from}》` : '每日一句'
+  } catch {
+    const dayIndex = new Date().getDate() % dailyFacts.length
+    dailyQuote.value = dailyFacts[dayIndex]
+    quoteFrom.value = '本地兜底'
+  }
+}
+
+function getCurrentPosition() {
+  return new Promise((resolve) => {
+    if (!navigator.geolocation) {
+      resolve(null)
+      return
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => resolve(position.coords),
+      () => resolve(null),
+      { enableHighAccuracy: false, timeout: 3500, maximumAge: 30 * 60 * 1000 },
+    )
+  })
+}
+
+async function loadWeather() {
+  const coords = (await getCurrentPosition()) || { latitude: 31.49, longitude: 120.27 }
+  const usingFallback = !('accuracy' in coords)
+  const url = new URL('https://api.open-meteo.com/v1/forecast')
+
+  url.search = new URLSearchParams({
+    latitude: String(coords.latitude),
+    longitude: String(coords.longitude),
+    current: 'temperature_2m,weather_code,relative_humidity_2m,wind_speed_10m',
+    daily: 'temperature_2m_max,temperature_2m_min',
+    timezone: 'auto',
+    forecast_days: '1',
+  }).toString()
+
+  try {
+    const response = await fetch(url)
+    if (!response.ok) throw new Error('weather request failed')
+    const data = await response.json()
+    const current = data.current || {}
+    const daily = data.daily || {}
+    const summary = weatherText[current.weather_code] || '天气未知'
+    const temperature = Math.round(current.temperature_2m)
+    const high = Math.round(daily.temperature_2m_max?.[0] ?? temperature)
+    const low = Math.round(daily.temperature_2m_min?.[0] ?? temperature)
+
+    weather.value = {
+      place: usingFallback ? '江南大学附近' : '当前位置',
+      text: `${summary} ${temperature}°C`,
+      detail: `今日 ${low}°C - ${high}°C · 湿度 ${current.relative_humidity_2m ?? '--'}% · 风速 ${current.wind_speed_10m ?? '--'} km/h`,
+    }
+  } catch {
+    weather.value = {
+      place: '天气暂不可用',
+      text: '保持好心情',
+      detail: 'API 暂时没有响应，出门前记得看一眼天空。',
+    }
+  }
+}
+
 onMounted(() => {
   const hashView = window.location.hash.replace('#', '')
   if (allViews.value.includes(hashView)) {
@@ -55,6 +147,9 @@ onMounted(() => {
   } else if (hashView) {
     setView('home')
   }
+
+  loadDailyQuote()
+  loadWeather()
 })
 
 watch(
@@ -117,8 +212,13 @@ watch(
             <strong>{{ today }}</strong>
           </article>
           <article class="note-panel">
-            <span>你知道吗</span>
-            <p>{{ todayFact }}</p>
+            <span>今日天气 · {{ weather.place }}</span>
+            <strong>{{ weather.text }}</strong>
+            <p>{{ weather.detail }}</p>
+          </article>
+          <article class="note-panel">
+            <span>每日一句 · {{ quoteFrom }}</span>
+            <p>{{ dailyQuote }}</p>
           </article>
         </aside>
 
