@@ -76,6 +76,12 @@ export const feeds = {
     platform: 'WECHAT',
     entries: [
       {
+        title: '夏天想',
+        summary: '公众号文章入口，点击卡片即可查看原文。',
+        date: '2026-06-09',
+        url: 'https://mp.weixin.qq.com/s/_OalTmopsqqYGiUHbVql6A',
+      },
+      {
         title: '想你的时候不想你',
         summary: '公众号文章入口，点击卡片即可查看原文。',
         date: '2026-05-21',
@@ -142,6 +148,18 @@ export const feeds = {
     description: '收录小红书帖子入口，点击卡片可直接跳转查看。',
     platform: 'XHS',
     entries: [
+      {
+        title: '六一，留忆',
+        summary: '小红书帖子入口，点击卡片可直接跳转查看。',
+        date: '2026-06-01',
+        url: 'https://www.xiaohongshu.com/discovery/item/6a1d8ace000000003502c7c9?source=webshare&xhsshare=pc_web&xsec_token=ABB5_ObcO5mOeN9Mo0XkRfjLCbn_Q4ZcmJ5JgSur4fpuA=&xsec_source=pc_share',
+      },
+      {
+        title: '26.5.21随感',
+        summary: '小红书帖子入口，点击卡片可直接跳转查看。',
+        date: '2026-05-21',
+        url: 'https://www.xiaohongshu.com/discovery/item/6a0ed1900000000008025223?source=webshare&xhsshare=pc_web&xsec_token=ABAb0JQOErsYmD6euSiT7cxt-LMALQ4dqVv1mAcgx4ims=&xsec_source=pc_share',
+      },
       {
         title: '我的专属 KV Cache',
         summary: '小红书帖子入口，点击卡片可直接跳转查看。',
