@@ -149,6 +149,12 @@ export const feeds = {
     platform: 'XHS',
     entries: [
       {
+        title: 'VS Code + GitHub 协作指南',
+        summary: '小红书帖子入口，点击卡片可直接跳转查看。',
+        date: '2026-06-18',
+        url: 'https://www.xiaohongshu.com/discovery/item/6a33a517000000002103e1bf?source=webshare&xhsshare=pc_web&xsec_token=YB4JoogOppe4U_SNFzyadMKaEUShqjk7lECUzsLzAaqtQ=&xsec_source=pc_share',
+      },
+      {
         title: '六一，留忆',
         summary: '小红书帖子入口，点击卡片可直接跳转查看。',
         date: '2026-06-01',
