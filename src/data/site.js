@@ -76,6 +76,12 @@ export const feeds = {
     platform: 'WECHAT',
     entries: [
       {
+        title: '苏格拉底之麦穗',
+        summary: '公众号文章入口，点击卡片即可查看原文。',
+        date: '2026-06-21',
+        url: 'https://mp.weixin.qq.com/s/mzJbGX5VdDJiGseM605_sQ',
+      },
+      {
         title: '夏天想',
         summary: '公众号文章入口，点击卡片即可查看原文。',
         date: '2026-06-09',
@@ -148,6 +154,12 @@ export const feeds = {
     description: '收录小红书帖子入口，点击卡片可直接跳转查看。',
     platform: 'XHS',
     entries: [
+      {
+        title: '苏格拉底之麦穗。',
+        summary: '小红书帖子入口，点击卡片可直接跳转查看。',
+        date: '2026-06-20',
+        url: 'https://www.xiaohongshu.com/discovery/item/6a357d1b00000000110065a8?source=webshare&xhsshare=pc_web&xsec_token=ABEPb-Z3P_MH0b93PHSz3dMVfQTWRj3jdjFhMo6jKehzc=&xsec_source=pc_share',
+      },
       {
         title: 'VS Code + GitHub 协作指南',
         summary: '小红书帖子入口，点击卡片可直接跳转查看。',
